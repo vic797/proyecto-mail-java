@@ -20,7 +20,9 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    CommunicationService communication;
+    public MainFrame(CommunicationService communication) {
+        this.communication = communication;
         initComponents();
     }
 
@@ -100,22 +102,7 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        // Por favor. Usemos el tema del sistema. El Nimbus es horrible.
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOpenFiles;
