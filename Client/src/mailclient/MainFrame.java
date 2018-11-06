@@ -5,11 +5,17 @@
  */
 package mailclient;
 
-import javax.swing.UIManager;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * EL control JList debe mostrar los archivos seleccionados
- * El control JProgressBar debe mostrar el progreso del envio, ya sea por entrada del XML o por archivo
  * El control JLabel debajo del JProgressBar debe indicar que archivo esta siendo leido / enviado
  * Los JButton son obvios
  * 
@@ -20,7 +26,10 @@ public class MainFrame extends javax.swing.JFrame {
     /**
      * Creates new form MainFrame
      */
-    CommunicationService communication;
+    private CommunicationService communication;
+    
+    private File[] selection;
+    
     public MainFrame(CommunicationService communication) {
         this.communication = communication;
         initComponents();
@@ -35,49 +44,52 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pbSending = new javax.swing.JProgressBar();
-        lblSending = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         btnOpenFiles = new javax.swing.JButton();
         btnSend = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cliente");
         setResizable(false);
 
-        lblSending.setText("Esperando...");
-
         jScrollPane1.setViewportView(jList1);
 
         btnOpenFiles.setText("Abrir archivos");
+        btnOpenFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenFilesActionPerformed(evt);
+            }
+        });
 
         btnSend.setText("Enviar");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Archivos seleccionados:");
+
+        jLabel1.setText("Esperando...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(pbSending, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(btnOpenFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(jLabel2)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(lblSending)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnOpenFiles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSend, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -85,32 +97,72 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnOpenFiles)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnSend)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pbSending, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblSending)
-                .addContainerGap())
+                .addComponent(jLabel1)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnOpenFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFilesActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter("XML File", "xml"));
+        chooser.setMultiSelectionEnabled(true);
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFiles().length > 5) {
+                JOptionPane.showMessageDialog(this, "No se pueden enviar mas de cinco archivos", "Error", JOptionPane.ABORT);
+                return;
+            }
+            selection = chooser.getSelectedFiles();
+            DefaultListModel<String> model = new DefaultListModel<>();
+            for (File file : chooser.getSelectedFiles()) {
+                model.add(0, file.getName());
+            }
+        }
+    }//GEN-LAST:event_btnOpenFilesActionPerformed
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (selection != null && selection.length != 0) {
+                    for (File file : selection) {
+                        jLabel1.setText(String.format("Enviando %1s", file.getName()));
+                        try {
+                            BufferedReader reader = new BufferedReader(new FileReader(file));
+                            String line;
+                            StringBuilder sb = new StringBuilder();
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                            }
+                            communication.sendXML(sb.toString());
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(MainFrame.this, ex.getMessage(), "Error", JOptionPane.OK_OPTION);
+                        }
+                    }
+                }
+                jLabel1.setText("Listo");
+            }
+        });
+        t.start();
+    }//GEN-LAST:event_btnSendActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOpenFiles;
     private javax.swing.JButton btnSend;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblSending;
-    private javax.swing.JProgressBar pbSending;
     // End of variables declaration//GEN-END:variables
 }
