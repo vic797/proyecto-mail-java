@@ -126,6 +126,7 @@ public class MainFrame extends javax.swing.JFrame {
             for (File file : chooser.getSelectedFiles()) {
                 model.add(0, file.getName());
             }
+            jList1.setModel(model);
         }
     }//GEN-LAST:event_btnOpenFilesActionPerformed
 
