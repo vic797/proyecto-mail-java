@@ -50,8 +50,7 @@ public class Mail {
     
     public void sendMessage() throws MessagingException {
         MimeMessage message = new MimeMessage(this.session);
-        try {
-            
+        try {     
             message.setFrom(new InternetAddress(this.addressFrom));
              message.addRecipient(
             Message.RecipientType.TO,
@@ -61,8 +60,7 @@ public class Mail {
             
             Transport t = session.getTransport("smtp");            
             t.connect(this.addressFrom, this.password);
-            t.sendMessage(message, message.getAllRecipients());
-                       
+            t.sendMessage(message, message.getAllRecipients());              
         } catch (AddressException ex) {
             Logger.getLogger(Mail.class.getName()).log(Level.SEVERE, null, ex);
         }

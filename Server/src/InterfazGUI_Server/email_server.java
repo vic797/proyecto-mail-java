@@ -4,6 +4,7 @@ package InterfazGUI_Server;
 import javax.swing.JOptionPane;
 import server.ClientThread;
 import server.Mail;
+import server.ServerAceppt;
 import server.XmlDocument;
 
 
@@ -18,6 +19,7 @@ public class email_server extends javax.swing.JFrame {
         this.cont = n;
         this.doc = d;
         this.mail = m;
+        this.ch = new ClientThread(ServerAceppt.sock, n);
         initComponents();
     }
 
@@ -96,21 +98,19 @@ public class email_server extends javax.swing.JFrame {
         //llama al metodo enviocorreo
         
         String password = "";     
-           char [] p = LoginServer.txtpass.getPassword();
-           for(int i = 0; i<p.length;i++){
-               password += p[i];
-           }
+            char [] p = LoginServer.txtpass.getPassword();
+            for (int i = 0; i<p.length;i++) {
+                password += p[i];
+            }
            
         String email = LoginServer.txtcorreo.getText().trim();
-        
-        if(!txt_subject.getText().equalsIgnoreCase("" ) && !txtbody.getText().equalsIgnoreCase("") ){
-           ch.EnvioCorreo(this.doc, this.mail,txtbody.getText().trim(),txt_subject.getText().trim(),email,password.trim());
+        if (!txt_subject.getText().equalsIgnoreCase("") && !txtbody.getText().equalsIgnoreCase("")) {
+            ch.EnvioCorreo(this.doc, this.mail,txtbody.getText().trim(),txt_subject.getText().trim(),email,password.trim());
            JOptionPane.showMessageDialog(null, "Correo enviado");
-       }else{
+       } else {
             JOptionPane.showMessageDialog(null, "Por favor no deje ningún campo vacío");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
     /**
      * @param args the command line arguments
      */

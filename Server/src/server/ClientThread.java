@@ -67,18 +67,19 @@ public class ClientThread extends Thread{
     
     public void EnvioCorreo(XmlDocument doc,Mail mail,String Body, String subject, String email, String password){
         try {
-                doc.stringXmlConvert();
-                for(int i = 0; i < doc.getLength(); i++) {
-                    mail.setAddressFrom(email);
-                    mail.setAddressTo(doc.getEmail(i));
-                    mail.setBody(doc.getFisrtname(i)+ Body);
-                    mail.setPassword(password);
-                    mail.setSubject(subject);
-                    mail.sendMessage();
-                }
-            } catch (ParserConfigurationException | SAXException | IOException | MessagingException ex) {
-                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+            doc.stringXmlConvert();
+
+            for(int i = 0; i < doc.getLength(); i++) {
+                mail.setAddressFrom(email);
+                mail.setAddressTo(doc.getEmail(i));
+                mail.setBody("Hola" + doc.getFisrtname(i)+ " \n" +  Body + "\n saludos.");
+                mail.setPassword(password);
+                mail.setSubject(subject);
+                mail.sendMessage();
             }
+        } catch (ParserConfigurationException | SAXException | IOException | MessagingException ex) {
+                JOptionPane.showMessageDialog(null, "no se ha  podido enviar el correo");
+                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);             
+        }
     }
-    
 }

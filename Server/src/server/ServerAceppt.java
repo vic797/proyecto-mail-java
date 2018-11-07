@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 public class ServerAceppt {
     
      private ServerSocket listener;
-     private Socket sock;
+     public static Socket sock;
      private String body;
      private String subject;
      private String password;

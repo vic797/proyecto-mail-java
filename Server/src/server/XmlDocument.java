@@ -8,6 +8,7 @@ package server;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,22 +47,22 @@ public class XmlDocument {
         try {  
             builder = factory.newDocumentBuilder();  
             Document document = builder.parse(new InputSource(new StringReader(this.xml))); 
-             document.getDocumentElement().normalize();
-             System.out.println("Elemento raiz:" + document.getDocumentElement().getNodeName());
-              NodeList listaPersonas = document.getElementsByTagName("personne");
-               for (int temp = 0; temp < listaPersonas.getLength(); temp++) {
-                    Node nodo = listaPersonas.item(temp);
-                    System.out.println("Elemento:" + nodo.getNodeName());
-                    Element element = (Element) nodo;
-                    System.out.println(element.getAttribute("id"));
-                    this.firstname.add(element.getElementsByTagName("firstname").item(0).getTextContent());
-                    this.lastnames.add(element.getElementsByTagName("lastname").item(0).getTextContent());
-                    this.phone.add(element.getElementsByTagName("phone").item(0).getTextContent());
-                    this.email.add(element.getElementsByTagName("email").item(0).getTextContent());
+            document.getDocumentElement().normalize();
+            System.out.println("Elemento raiz:" + document.getDocumentElement().getNodeName());
+            NodeList listaPersonas = document.getElementsByTagName("personne");
+            for (int temp = 0; temp < listaPersonas.getLength(); temp++) {
+                Node nodo = listaPersonas.item(temp);
+                System.out.println("Elemento:" + nodo.getNodeName());
+                Element element = (Element) nodo;
+                System.out.println(element.getAttribute("id"));
+                this.firstname.add(element.getElementsByTagName("firstname").item(0).getTextContent());
+                this.lastnames.add(element.getElementsByTagName("lastname").item(0).getTextContent());
+                this.phone.add(element.getElementsByTagName("phone").item(0).getTextContent());
+                this.email.add(element.getElementsByTagName("email").item(0).getTextContent());
                }
-        
         } catch (Exception e) {  
-            e.printStackTrace();  
+            e.printStackTrace(); 
+            JOptionPane.showMessageDialog(null, "XML en formato incorrecto");
         } 
     }
     
